@@ -1,0 +1,45 @@
+# Node.js specific
+node_modules/
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs
+*.log
+logs/**/*.log
+
+# Build
+dist/
+build/
+.out/
+.next/
+
+# Coverage reports
+coverage/
+
+# Temporary files
+*.tmp
+*.swp
+
+# IDE-specific
+.idea/
+.vscode/
+*.code-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Misc
+*.bak
+*.old
+*.orig
+
+# TypeScript specific
+*.tsbuildinfo
+
+# Test outputs
+test-output/
+jest/
