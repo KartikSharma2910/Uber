@@ -5,13 +5,11 @@ const CaptainSignUp = () => {
   const [email, setEmail] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
+  const [capacity, setCapacity] = useState("");
   const [firstName, setFirstName] = useState("");
-
-  const footerActions = {
-    to: "/user-signup",
-    buttonColor: "#f3c164",
-    label: "Join as a User",
-  };
+  const [vehicleType, setVehicleType] = useState("");
+  const [vehicleColor, setVehicleColor] = useState("");
+  const [registrationNumber, setRegistrationNumber] = useState("");
 
   const linkActions = {
     to: "/captain-login",
@@ -21,20 +19,27 @@ const CaptainSignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = { email, password, firstName, lastName };
+    const formData = {
+      email,
+      password,
+      firstName,
+      lastName,
+      capacity,
+      vehicleType,
+      vehicleColor,
+      registrationNumber,
+    };
     console.log(formData);
   };
 
   return (
     <FormLayout
-      showConcent
       link={linkActions}
       buttonLabel="Sign Up"
-      footer={footerActions}
       handleSubmit={handleSubmit}
     >
       <div className="form-group">
-        <h3 className="input-label">What's your name?</h3>
+        <h3 className="input-label">What's our Captains Name?</h3>
         <div className="flex gap-4">
           <input
             type="text"
@@ -75,6 +80,45 @@ const CaptainSignUp = () => {
           placeholder="Enter your password"
           onChange={(e) => setPassword(e.target.value)}
         />
+      </div>
+      <div className="form-group">
+        <h3 className="input-label">Vehicle Details</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <input
+            type="text"
+            value={vehicleColor}
+            className="input-field"
+            placeholder="Colour"
+            autoComplete="new-password"
+            onChange={(e) => setVehicleColor(e.target.value)}
+          />
+          <input
+            type="text"
+            value={registrationNumber}
+            className="input-field"
+            placeholder="Reg. Number"
+            autoComplete="new-password"
+            onChange={(e) => setRegistrationNumber(e.target.value)}
+          />
+          <input
+            type="number"
+            value={capacity}
+            className="input-field"
+            placeholder="Capacity"
+            autoComplete="new-password"
+            onChange={(e) => setCapacity(e.target.value)}
+          />
+          <select
+            value={vehicleType}
+            className="input-field"
+            onChange={(e) => setVehicleType(e.target.value)}
+          >
+            <option value="">Select vehicle type</option>
+            <option value="car">Car</option>
+            <option value="auto">Auto</option>
+            <option value="motorcycle">Motorcycle</option>
+          </select>
+        </div>
       </div>
     </FormLayout>
   );
