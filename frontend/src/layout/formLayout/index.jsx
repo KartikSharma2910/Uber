@@ -5,11 +5,12 @@ const FormLayout = ({
   footer,
   disabled,
   children,
+  showConcent = false,
   handleSubmit,
   buttonLabel,
   handleClick,
 }) => {
-  const { label } = footer || {};
+  const { label, to: footerTo, buttonColor } = footer || {};
   const { linkPrefix, label: linkLabel, to } = link || {};
   return (
     <div className="flex justify-between flex-col p-7 h-screen">
@@ -35,11 +36,29 @@ const FormLayout = ({
           </Link>
         </div>
       </form>
+      {showConcent && (
+        <p className="text-xs text-gray-500 mt-4">
+          By proceeding, you agree to our{" "}
+          <a href="#" className="text-blue-700 hover:underline">
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a href="#" className="text-blue-700 hover:underline">
+            Privacy Policy
+          </a>
+          . And you confirm that you are over 18 years old. You may receive
+          email notifications from us and can opt out at any time.
+        </p>
+      )}
       <div>
         {footer && (
-          <button className="w-full bg-green-700 text-white font-semibold py-2 px-4 rounded mt-4 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400">
+          <Link
+            to={footerTo}
+            style={{ backgroundColor: buttonColor }}
+            className="flex items-center justify-center w-full text-white font-semibold py-2 px-4 rounded mt-4 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
+          >
             {label}
-          </button>
+          </Link>
         )}
       </div>
     </div>
