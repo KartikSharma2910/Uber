@@ -1,15 +1,22 @@
 import { useState } from "react";
 import { FormLayout } from "../../layout";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { registerCaptain } from "../../services/CaptainServices";
 
 const CaptainSignUp = () => {
-  const [email, setEmail] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
-  const [capacity, setCapacity] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [vehicleType, setVehicleType] = useState("");
-  const [vehicleColor, setVehicleColor] = useState("");
-  const [registrationNumber, setRegistrationNumber] = useState("");
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    capacity: "",
+    vehicleType: "",
+    vehicleColor: "",
+    registrationNumber: "",
+  });
+  const [loading, setLoading] = useState(false);
 
   const linkActions = {
     to: "/captain-login",
@@ -17,25 +24,51 @@ const CaptainSignUp = () => {
     label: "Sign In here",
   };
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = {
-      email,
-      password,
-      firstName,
-      lastName,
-      capacity,
-      vehicleType,
-      vehicleColor,
-      registrationNumber,
-    };
-    console.log(formData);
+    try {
+      setLoading(true);
+      const payload = {
+        email: formData.email,
+        password: formData.password,
+        fullName: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+        },
+        vehicle: {
+          color: formData.vehicleColor,
+          plate: formData.registrationNumber,
+          capacity: formData.capacity,
+          vehicleType: formData.vehicleType,
+        },
+      };
+      const response = await registerCaptain(payload);
+      if (response?.token) {
+        localStorage.setItem("accessToken", response.token);
+      }
+      toast.success("Captain Registered successfully");
+      navigate("/");
+    } catch (error) {
+      const message =
+        error?.response?.data?.message || error?.message || "Login failed";
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <FormLayout
       link={linkActions}
-      buttonLabel="Sign Up"
+      buttonLabel={loading ? "Getting things ready" : "Sign Up"}
       handleSubmit={handleSubmit}
     >
       <div className="form-group">
@@ -43,19 +76,21 @@ const CaptainSignUp = () => {
         <div className="flex gap-4">
           <input
             type="text"
-            value={firstName}
+            name="firstName"
+            onChange={handleChange}
             className="input-field"
             placeholder="First Name"
+            value={formData.firstName}
             autoComplete="new-password"
-            onChange={(e) => setFirstName(e.target.value)}
           />
           <input
             type="text"
-            value={lastName}
+            name="lastName"
+            onChange={handleChange}
             className="input-field"
             placeholder="Last Name"
+            value={formData.lastName}
             autoComplete="new-password"
-            onChange={(e) => setLastName(e.target.value)}
           />
         </div>
       </div>
@@ -63,22 +98,24 @@ const CaptainSignUp = () => {
         <h3 className="input-label">What's your email?</h3>
         <input
           type="text"
-          value={email}
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
           className="input-field"
           autoComplete="new-password"
           placeholder="Enter your email"
-          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
       <div className="form-group">
         <h3 className="input-label">Enter Password</h3>
         <input
           type="password"
-          value={password}
+          name="password"
+          onChange={handleChange}
+          value={formData.password}
           className="input-field"
           autoComplete="new-password"
           placeholder="Enter your password"
-          onChange={(e) => setPassword(e.target.value)}
         />
       </div>
       <div className="form-group">
@@ -86,32 +123,36 @@ const CaptainSignUp = () => {
         <div className="grid grid-cols-2 gap-4">
           <input
             type="text"
-            value={vehicleColor}
+            name="vehicleColor"
+            onChange={handleChange}
             className="input-field"
             placeholder="Colour"
             autoComplete="new-password"
-            onChange={(e) => setVehicleColor(e.target.value)}
+            value={formData.vehicleColor}
           />
           <input
             type="text"
-            value={registrationNumber}
+            onChange={handleChange}
+            name="registrationNumber"
             className="input-field"
             placeholder="Reg. Number"
             autoComplete="new-password"
-            onChange={(e) => setRegistrationNumber(e.target.value)}
+            value={formData.registrationNumber}
           />
           <input
             type="number"
-            value={capacity}
+            name="capacity"
+            onChange={handleChange}
             className="input-field"
             placeholder="Capacity"
+            value={formData.capacity}
             autoComplete="new-password"
-            onChange={(e) => setCapacity(e.target.value)}
           />
           <select
-            value={vehicleType}
+            name="vehicleType"
+            onChange={handleChange}
             className="input-field"
-            onChange={(e) => setVehicleType(e.target.value)}
+            value={formData.vehicleType}
           >
             <option value="">Select vehicle type</option>
             <option value="car">Car</option>
